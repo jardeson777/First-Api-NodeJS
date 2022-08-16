@@ -52,4 +52,11 @@ bookServer.put("/livros/:id", (req, res) => {
   res.status(201).send("Book change with success");
 });
 
+bookServer.get("/livros/:id", (req, res) => {
+  const idBook = req.params.id;
+  const indexFound = searchIndexOfBook(Number(idBook));
+
+  res.send(bookRepos[indexFound]);
+});
+
 export { bookServer };
