@@ -1,8 +1,13 @@
 import express from "express";
 
-const book = express();
+const bookServer = express();
 
-const bookRepos = [
+type BookProps = {
+  id: number;
+  name: string;
+};
+
+const bookRepos: BookProps[] = [
   {
     id: 1,
     name: "A culpa é das estrelas",
@@ -13,12 +18,38 @@ const bookRepos = [
   },
 ];
 
-book.get("/", function (req, res) {
+const searchIndexOfBook = (bookId: number) => {
+  let indexFound = 0;
+  bookRepos.forEach((bookItem, index) => {
+    if (bookItem.id === bookId) {
+      indexFound = index;
+    }
+  });
+
+  return indexFound;
+};
+
+bookServer.use(express.json());
+
+bookServer.get("/", (req, res) => {
   res.send("api de livros");
 });
 
-book.get("/livros", function (req, res) {
+bookServer.get("/livros", (req, res) => {
   res.json(bookRepos);
 });
 
-export { book };
+bookServer.post("/livros", (req, res) => {
+  bookRepos.push(req.body);
+  res.status(201).send("Book register with success");
+});
+
+bookServer.put("/livros/:id", (req, res) => {
+  const idBook = req.params.id;
+  const indexFound = searchIndexOfBook(Number(idBook));
+  bookRepos[indexFound].name = req.body.name;
+
+  res.status(201).send("Book change with success");
+});
+
+export { bookServer };
