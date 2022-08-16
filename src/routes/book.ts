@@ -59,4 +59,13 @@ bookServer.get("/livros/:id", (req, res) => {
   res.send(bookRepos[indexFound]);
 });
 
+bookServer.get("/livros/:id", (req, res) => {
+  const idBook = req.params.id;
+  const indexFound = searchIndexOfBook(Number(idBook));
+
+  bookRepos.splice(indexFound, 1);
+
+  res.send(`Book of id ${idBook} deleted with success`);
+});
+
 export { bookServer };
